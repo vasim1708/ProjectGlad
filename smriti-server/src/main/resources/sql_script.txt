@@ -1,0 +1,262 @@
+CREATE TABLE "VEHICLE" (
+	"id" NUMBER(10, 0) NOT NULL,
+	"type" VARCHAR2(10) NOT NULL,
+	"model" VARCHAR2(64) NOT NULL,
+	"manufacture" VARCHAR2(255) NOT NULL,
+	"driving_license" VARCHAR2(64) NOT NULL,
+	"purchase_date" DATE NOT NULL,
+	"registration_no" VARCHAR2(64) UNIQUE NOT NULL,
+	"engine_no" VARCHAR2(64) UNIQUE NOT NULL,
+	"chasis_number" VARCHAR2(64) UNIQUE NOT NULL,
+	"engine_type" VARCHAR2(64) UNIQUE NOT NULL DEFAULT "Petrol",
+	"customer_no" NUMBER(10, 0) UNIQUE NOT NULL,
+	"last_renew_date" TIMESTAMP UNIQUE,
+	constraint VEHICLE_PK PRIMARY KEY ("id"));
+
+CREATE sequence "VEHICLE_ID_SEQ";
+
+CREATE trigger "BI_VEHICLE_ID"
+  before insert on "VEHICLE"
+  for each row
+begin
+  select "VEHICLE_ID_SEQ".nextval into :NEW."id" from dual;
+end;
+
+/
+CREATE TABLE "POLICY" (
+	"id" NUMBER(10, 0) NOT NULL,
+	"status" VARCHAR2(64) NOT NULL,
+	"issue_date" DATE NOT NULL,
+	"expiry_date" DATE NOT NULL,
+	"duration" VARCHAR2(64) NOT NULL,
+	"policy_amount" NUMBER(10, 0) NOT NULL,
+	"plan_amount" NUMBER(10, 0) NOT NULL,
+	"customer_no" NUMBER(10, 0) NOT NULL,
+	"insurance_no" NUMBER(10, 0) NOT NULL,
+	constraint POLICY_PK PRIMARY KEY ("id"));
+
+CREATE sequence "POLICY_ID_SEQ";
+
+CREATE trigger "BI_POLICY_ID"
+  before insert on "POLICY"
+  for each row
+begin
+  select "POLICY_ID_SEQ".nextval into :NEW."id" from dual;
+end;
+CREATE sequence "POLICY_POLICY_AMOUNT_SEQ";
+
+CREATE trigger "BI_POLICY_POLICY_AMOUNT"
+  before insert on "POLICY"
+  for each row
+begin
+  select "POLICY_POLICY_AMOUNT_SEQ".nextval into :NEW."policy_amount" from dual;
+end;
+CREATE sequence "POLICY_PLAN_AMOUNT_SEQ";
+
+CREATE trigger "BI_POLICY_PLAN_AMOUNT"
+  before insert on "POLICY"
+  for each row
+begin
+  select "POLICY_PLAN_AMOUNT_SEQ".nextval into :NEW."plan_amount" from dual;
+end;
+
+/
+CREATE TABLE "CUSTOMER" (
+	"id" NUMBER(10, 0) NOT NULL,
+	"name" VARCHAR2(64) NOT NULL,
+	"email_id" VARCHAR2(128) NOT NULL,
+	"date_of_birth" DATE NOT NULL,
+	"contact_no" INT NOT NULL,
+	"address_id" VARCHAR2(255) NOT NULL,
+	"password" VARCHAR2(255) NOT NULL,
+	constraint CUSTOMER_PK PRIMARY KEY ("id"));
+
+CREATE sequence "CUSTOMER_ID_SEQ";
+
+CREATE trigger "BI_CUSTOMER_ID"
+  before insert on "CUSTOMER"
+  for each row
+begin
+  select "CUSTOMER_ID_SEQ".nextval into :NEW."id" from dual;
+end;
+
+/
+CREATE TABLE "USER" (
+	"id" INT NOT NULL,
+	"email_id" VARCHAR2(255) UNIQUE NOT NULL,
+	"password" VARCHAR2(255) NOT NULL,
+	"last_password_set" DATE NOT NULL DEFAULT "null",
+	"role" VARCHAR2(50) NOT NULL DEFAULT "USER",
+	"customer_id" INT,
+	constraint USER_PK PRIMARY KEY ("id"));
+
+CREATE sequence "USER_ID_SEQ";
+
+CREATE trigger "BI_USER_ID"
+  before insert on "USER"
+  for each row
+begin
+  select "USER_ID_SEQ".nextval into :NEW."id" from dual;
+end;
+
+/
+CREATE TABLE "CLAIM_HISTORY" (
+	"id" INT NOT NULL,
+	"date" DATE NOT NULL,
+	"status" VARCHAR2(64) NOT NULL DEFAULT "Not Approved",
+	"amount" INT NOT NULL,
+	"policy_no" INT NOT NULL,
+	"reason" VARCHAR2(255) NOT NULL,
+	"contact_no" NUMBER(10, 0) NOT NULL,
+	"customer_no" NUMBER(10, 0) NOT NULL,
+	constraint CLAIM_HISTORY_PK PRIMARY KEY ("id"));
+
+CREATE sequence "CLAIM_HISTORY_ID_SEQ";
+
+CREATE trigger "BI_CLAIM_HISTORY_ID"
+  before insert on "CLAIM_HISTORY"
+  for each row
+begin
+  select "CLAIM_HISTORY_ID_SEQ".nextval into :NEW."id" from dual;
+end;
+CREATE sequence "CLAIM_HISTORY_AMOUNT_SEQ";
+
+CREATE trigger "BI_CLAIM_HISTORY_AMOUNT"
+  before insert on "CLAIM_HISTORY"
+  for each row
+begin
+  select "CLAIM_HISTORY_AMOUNT_SEQ".nextval into :NEW."amount" from dual;
+end;
+CREATE sequence "CLAIM_HISTORY_POLICY_NO_SEQ";
+
+CREATE trigger "BI_CLAIM_HISTORY_POLICY_NO"
+  before insert on "CLAIM_HISTORY"
+  for each row
+begin
+  select "CLAIM_HISTORY_POLICY_NO_SEQ".nextval into :NEW."policy_no" from dual;
+end;
+
+/
+CREATE TABLE "INSURANCE_PLAN" (
+	"id" NUMBER(10, 0) NOT NULL,
+	"name" VARCHAR2(255) NOT NULL,
+	"type" VARCHAR2(255) NOT NULL,
+	"duration" NUMBER(10, 0) NOT NULL,
+	"amount" NUMBER(10, 0) NOT NULL,
+	"commission" NUMBER(10, 0) NOT NULL,
+	constraint INSURANCE_PLAN_PK PRIMARY KEY ("id"));
+
+CREATE sequence "INSURANCE_PLAN_ID_SEQ";
+
+CREATE trigger "BI_INSURANCE_PLAN_ID"
+  before insert on "INSURANCE_PLAN"
+  for each row
+begin
+  select "INSURANCE_PLAN_ID_SEQ".nextval into :NEW."id" from dual;
+end;
+CREATE sequence "INSURANCE_PLAN_DURATION_SEQ";
+
+CREATE trigger "BI_INSURANCE_PLAN_DURATION"
+  before insert on "INSURANCE_PLAN"
+  for each row
+begin
+  select "INSURANCE_PLAN_DURATION_SEQ".nextval into :NEW."duration" from dual;
+end;
+CREATE sequence "INSURANCE_PLAN_AMOUNT_SEQ";
+
+CREATE trigger "BI_INSURANCE_PLAN_AMOUNT"
+  before insert on "INSURANCE_PLAN"
+  for each row
+begin
+  select "INSURANCE_PLAN_AMOUNT_SEQ".nextval into :NEW."amount" from dual;
+end;
+CREATE sequence "INSURANCE_PLAN_COMMISSION_SEQ";
+
+CREATE trigger "BI_INSURANCE_PLAN_COMMISSION"
+  before insert on "INSURANCE_PLAN"
+  for each row
+begin
+  select "INSURANCE_PLAN_COMMISSION_SEQ".nextval into :NEW."commission" from dual;
+end;
+
+/
+CREATE TABLE "PAYMENT" (
+	"id" NUMBER(10, 0) NOT NULL,
+	"customer_no" NUMBER(10, 0) NOT NULL,
+	"amount" NUMBER(10, 0) NOT NULL,
+	"mode" VARCHAR2(64) NOT NULL,
+	"date" DATE NOT NULL,
+	constraint PAYMENT_PK PRIMARY KEY ("id"));
+
+CREATE sequence "PAYMENT_ID_SEQ";
+
+CREATE trigger "BI_PAYMENT_ID"
+  before insert on "PAYMENT"
+  for each row
+begin
+  select "PAYMENT_ID_SEQ".nextval into :NEW."id" from dual;
+end;
+CREATE sequence "PAYMENT_CUSTOMER_NO_SEQ";
+
+CREATE trigger "BI_PAYMENT_CUSTOMER_NO"
+  before insert on "PAYMENT"
+  for each row
+begin
+  select "PAYMENT_CUSTOMER_NO_SEQ".nextval into :NEW."customer_no" from dual;
+end;
+
+/
+CREATE TABLE "PREMIUM_ESTIMATE_MOTOR" (
+	"id" NUMBER(10, 0) NOT NULL,
+	"type" VARCHAR2(10) NOT NULL,
+	"age" NUMBER(10, 0) NOT NULL,
+	"model" VARCHAR2(64) NOT NULL,
+	"amount" NUMBER(10, 0) NOT NULL,
+	"depreciation_rate" NUMBER(10, 0) NOT NULL,
+	constraint PREMIUM_ESTIMATE_MOTOR_PK PRIMARY KEY ("id"));
+
+CREATE sequence "PREMIUM_ESTIMATE_MOTOR_ID_SEQ";
+
+CREATE trigger "BI_PREMIUM_ESTIMATE_MOTOR_ID"
+  before insert on "PREMIUM_ESTIMATE_MOTOR"
+  for each row
+begin
+  select "PREMIUM_ESTIMATE_MOTOR_ID_SEQ".nextval into :NEW."id" from dual;
+end;
+
+/
+CREATE TABLE "ADDRESS" (
+	"id" INT NOT NULL,
+	"city" VARCHAR2(255) NOT NULL,
+	"pincode" NUMBER(6, 0) NOT NULL,
+	"landMark" VARCHAR2(255) NOT NULL,
+	constraint ADDRESS_PK PRIMARY KEY ("id"));
+
+CREATE sequence "ADDRESS_ID_SEQ";
+
+CREATE trigger "BI_ADDRESS_ID"
+  before insert on "Address"
+  for each row
+begin
+  select "ADDRESS_ID_SEQ".nextval into :NEW."id" from dual;
+end;
+
+/
+ALTER TABLE "VEHICLE" ADD CONSTRAINT "VEHICLE_fk0" FOREIGN KEY ("customer_no") REFERENCES "CUSTOMER"("id");
+
+ALTER TABLE "POLICY" ADD CONSTRAINT "POLICY_fk0" FOREIGN KEY ("customer_no") REFERENCES "CUSTOMER"("id");
+ALTER TABLE "POLICY" ADD CONSTRAINT "POLICY_fk1" FOREIGN KEY ("insurance_no") REFERENCES "INSURANCE_PLAN"("id");
+
+ALTER TABLE "CUSTOMER" ADD CONSTRAINT "CUSTOMER_fk0" FOREIGN KEY ("address_id") REFERENCES "Address"("id");
+
+ALTER TABLE "USER" ADD CONSTRAINT "USER_fk0" FOREIGN KEY ("email_id") REFERENCES ""("");
+ALTER TABLE "USER" ADD CONSTRAINT "USER_fk1" FOREIGN KEY ("customer_id") REFERENCES "CUSTOMER"("id");
+
+ALTER TABLE "CLAIM_HISTORY" ADD CONSTRAINT "CLAIM_HISTORY_fk0" FOREIGN KEY ("policy_no") REFERENCES "POLICY"("id");
+ALTER TABLE "CLAIM_HISTORY" ADD CONSTRAINT "CLAIM_HISTORY_fk1" FOREIGN KEY ("customer_no") REFERENCES "CUSTOMER"("id");
+
+
+ALTER TABLE "PAYMENT" ADD CONSTRAINT "PAYMENT_fk0" FOREIGN KEY ("customer_no") REFERENCES "CUSTOMER"("id");
+
+
+
